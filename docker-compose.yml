@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:14
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: typeorm
+
+  mysql:
+    platform: linux/x86_64
+    image: mysql:8.0
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: typeorm
+      MYSQL_USER: typeorm
+      MYSQL_PASSWORD: typeorm
+      MYSQL_ROOT_PASSWORD: typeorm

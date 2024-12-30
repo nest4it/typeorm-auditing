@@ -1,6 +1,6 @@
 import { DataSource } from 'typeorm';
 import { Case1, Case1Audit } from './entity/case1';
-import { AuditingSubscriber } from '../auditing-subscriber';
+import { AuditingSubscriber } from '../src/auditing-subscriber';
 
 (async function () {
     //Data Source

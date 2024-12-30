@@ -8,12 +8,12 @@
 ## Install
 - NPM
 ```shell
-$ npm install typeorm-auditing --save
+$ npm install @n4it/typeorm-auditing --save
 ```
 
 - Yarn
 ```shell
-$ yarn add typeorm-auditing
+$ yarn add @n4it/typeorm-auditing
 ```
 
 ----

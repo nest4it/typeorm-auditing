@@ -1,23 +1,23 @@
-import { AuditingAction } from '../decorator/auditing-entity.decorator';
+import { AuditingAction } from '../src/decorator/auditing-entity.decorator';
 import { testConnection } from './test-common';
 import { In } from 'typeorm';
-import { Case4, Case4Audit, Case4Parent } from './entity/case4';
+import { Case3, Case3Audit, Case3Parent } from './entity/case3';
 
-describe('AuditingEntity - Case4', () => {
+describe('AuditingEntity - Case3', () => {
     beforeEach(async () => {
         const dataSource = await testConnection([]);
-        await dataSource.query(`DROP TABLE IF EXISTS case4_audit CASCADE`);
-        await dataSource.query(`DROP TABLE IF EXISTS case4 CASCADE`);
-        await dataSource.query(`DROP TABLE IF EXISTS case4_parent CASCADE`);
+        await dataSource.query(`DROP TABLE IF EXISTS case3_audit CASCADE`);
+        await dataSource.query(`DROP TABLE IF EXISTS case3 CASCADE`);
+        await dataSource.query(`DROP TABLE IF EXISTS case3_parent CASCADE`);
         await dataSource.destroy();
     });
 
-    it('Case4(Not inherited + ObjectLiteral + ManyToOne + JoinColumn)', async () => {
-        const dataSource = await testConnection([Case4Parent, Case4, Case4Audit]);
+    it('Case3(Inheritance + ManyToOne + JoinColumn)', async () => {
+        const dataSource = await testConnection([Case3Parent, Case3, Case3Audit]);
 
-        const parents = await dataSource.getRepository(Case4Parent).save([{ name: 'Parent1' }, { name: 'Parent2' }, { name: 'Parent3' }]);
+        const parents = await dataSource.getRepository(Case3Parent).save([{ name: 'Parent1' }, { name: 'Parent2' }, { name: 'Parent3' }]);
 
-        const entities = await dataSource.getRepository(Case4).save([
+        const entities = await dataSource.getRepository(Case3).save([
             {
                 firstName: 'Timber1',
                 lastName: 'Saw',
@@ -41,7 +41,7 @@ describe('AuditingEntity - Case4', () => {
         console.log(entities);
 
         //Create
-        const created = await dataSource.manager.find(Case4Audit, {
+        const created = await dataSource.manager.find(Case3Audit, {
             where: { firstName: In(['Timber1', 'Timber2', 'Timber3']) },
             order: { _seq: 'ASC' },
             relations: ['parent'],

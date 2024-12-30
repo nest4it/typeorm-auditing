@@ -9,7 +9,7 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
-import { AuditingAction, AuditingEntity, AuditingEntityDefaultColumns } from '../../decorator/auditing-entity.decorator';
+import { AuditingAction, AuditingEntity, AuditingEntityDefaultColumns } from '../../src/decorator/auditing-entity.decorator';
 
 abstract class MyBase1 extends BaseEntity {
     @PrimaryGeneratedColumn({ type: 'int' })

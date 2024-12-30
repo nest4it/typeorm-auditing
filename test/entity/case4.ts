@@ -1,8 +1,8 @@
 import { BeforeInsert, Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { AuditingAction, AuditingEntity, AuditingEntityDefaultColumns } from '../../decorator/auditing-entity.decorator';
+import { AuditingAction, AuditingEntity, AuditingEntityDefaultColumns } from '../../src/decorator/auditing-entity.decorator';
 
 @Entity()
-export class Case3Parent {
+export class Case4Parent {
     @PrimaryGeneratedColumn()
     id!: number;
 
@@ -10,17 +10,17 @@ export class Case3Parent {
     name!: string;
 }
 
-export class Case3Base {
+export class Case4Base {
     @PrimaryGeneratedColumn()
     id!: number;
 
-    @ManyToOne('Case3Parent', 'id')
+    @ManyToOne(() => Case4Parent, (o) => o.id)
     @JoinColumn({ name: 'parent_id' })
-    parent!: Case3Parent;
+    parent!: Case4Parent;
 }
 
 @Entity()
-export class Case3 extends Case3Base {
+export class Case4 extends Case4Base {
     @Column({ name: 'first_name' })
     @Index({ unique: true })
     firstName!: string;
@@ -32,20 +32,20 @@ export class Case3 extends Case3Base {
     age!: number;
 }
 
-@AuditingEntity(Case3, {
+@AuditingEntity(Case4, {
     //Set type to int for sqlite e2e test
     seqType: 'int',
 })
-export class Case3Audit extends Case3 implements AuditingEntityDefaultColumns {
+export class Case4Audit implements AuditingEntityDefaultColumns {
     readonly _seq!: number;
     readonly _action!: AuditingAction;
     readonly _modifiedAt!: Date;
 
-    // id!: number;
-    // parent!: Case3Parent;
-    // firstName!: string;
-    // lastName!: string;
-    // age!: number;
+    id!: number;
+    parent!: Case4Parent;
+    firstName!: string;
+    lastName!: string;
+    age!: number;
 
     @Column({ nullable: true })
     additionalColumn!: string;
