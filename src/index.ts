@@ -1,2 +1,2 @@
-export * from './auditing-subscriber';
-export * from './decorator/auditing-entity.decorator';
+export * from './subscribers/audit.subscriber';
+export * from './decorator/audit-entity.decorator';

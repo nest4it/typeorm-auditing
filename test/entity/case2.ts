@@ -1,5 +1,5 @@
 import { AfterLoad, BaseEntity, BeforeInsert, Column, Entity, Index, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { AuditingAction, AuditingEntity, AuditingEntityDefaultColumns } from '../../src/decorator/auditing-entity.decorator';
+import { AuditingAction, AuditingEntity, AuditingEntityDefaultColumns } from '../../src/decorator/audit-entity.decorator';
 
 abstract class MyBase1 {
     @PrimaryGeneratedColumn()

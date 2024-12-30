@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm';
-import { AuditingSubscriber } from '../src/auditing-subscriber';
+import { AuditingSubscriber } from '../src/subscribers/audit.subscriber';
 
 export async function testConnection(entities: any[]): Promise<DataSource> {
     return await new DataSource({

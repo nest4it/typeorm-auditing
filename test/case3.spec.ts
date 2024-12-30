@@ -1,4 +1,4 @@
-import { AuditingAction } from '../src/decorator/auditing-entity.decorator';
+import { AuditingAction } from '../src/decorator/audit-entity.decorator';
 import { testConnection } from './test-common';
 import { In } from 'typeorm';
 import { Case3, Case3Audit, Case3Parent } from './entity/case3';

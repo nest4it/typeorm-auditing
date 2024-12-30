@@ -1,5 +1,5 @@
 import { BeforeInsert, Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { AuditingAction, AuditingEntity, AuditingEntityDefaultColumns } from '../../src/decorator/auditing-entity.decorator';
+import { AuditingAction, AuditingEntity, AuditingEntityDefaultColumns } from '../../src/decorator/audit-entity.decorator';
 
 @Entity()
 export class Case4Parent {

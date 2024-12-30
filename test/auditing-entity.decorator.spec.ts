@@ -1,4 +1,4 @@
-import { AbstractAuditingBaseEntity, AuditingEntity } from '../src/decorator/auditing-entity.decorator';
+import { AbstractAuditingBaseEntity, AuditingEntity } from '../src/decorator/audit-entity.decorator';
 import { getMetadataArgsStorage } from 'typeorm';
 import * as assert from 'assert';
 import { Case1Audit } from './entity/case1';
