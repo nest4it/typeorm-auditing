@@ -78,6 +78,27 @@ await dataSource.initialize();
 
 The `withAuditDataSource` basically extracts the meta data from the TypeORM entities and make sure the entites with `Audit` metadata are recognised.
 
+### Use `modifiedBy`
+
+```typescript
+import { Audit } from "@n4it/typeorm-audit"
+
+@Audit({
+    getModifiedBy: async (connection: DataSource, newEntity: any) => {
+      return Promise.resolve(newEntity.lastModifiedBy ?? 1)
+    }
+})
+@Entity()
+export class User {
+  @Column()
+  firstName: string;
+  @Column()
+  lastName: string;
+  @Column()
+  age: number;
+}
+```
+
 ## Support
 
 Any support is welcome. At least you can give us a star.
