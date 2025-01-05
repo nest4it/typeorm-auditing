@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, VersionColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { AuditAction, type AuditSubscriberOptions, type AuditOptions } from '../types';
 import { isStringVersionType } from './is';
 
@@ -8,7 +8,7 @@ export const createHistoryEntity = (opts: AuditOptions & { isEntitySpecific: boo
     // @ts-ignore
     @PrimaryGeneratedColumn(isStringVersionType(opts.primaryIdType) ? opts.primaryIdType : { type: opts.primaryIdType })
     id: string | number;
-    
+
     @Column({
       nullable: true,
     })
