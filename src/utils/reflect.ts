@@ -11,9 +11,9 @@ export const setMetaData = (
 export const getMetaData = (
   target: Object,
 ): AuditSubscriberOptions & { historyEntity: Function } => {
-  if (Reflect.hasMetadata(AUDIT_METADATA_KEY, target)) {
+  try {
     return Reflect.getMetadata(AUDIT_METADATA_KEY, target);
+  } catch {
+    return undefined;
   }
-
-  return null;
 };
