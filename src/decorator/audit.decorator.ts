@@ -2,7 +2,7 @@ import type { AuditOptions } from '../types';
 import { createEntityOpts, createHistoryEntity } from '../utils';
 import { setMetaData } from '../utils/reflect';
 
-export const Audit = (options?: Partial<AuditOptions>) => (target: Function) => {
+export const Audit = (options?: Partial<AuditOptions>) => (target: any) => {
   const auditOptions = createEntityOpts(target, options);
   const historyTarget = createHistoryEntity(auditOptions.opts);
 

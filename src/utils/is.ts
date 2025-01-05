@@ -1,7 +1,6 @@
-import { PrimaryGeneratedColumn } from 'typeorm';
-
 export const isStringVersionType = (
   value: any,
-): value is Parameters<typeof PrimaryGeneratedColumn>[0] =>
+): value is 'uuid' | 'rowid' | 'identity' | 'increment' =>
   ['increment', 'uuid', 'rowid', 'identity'].includes(value);
-export const isFunction = (value: any): value is Function => typeof value === 'function';
+
+export const isFunction = (value: any) => typeof value === 'function';

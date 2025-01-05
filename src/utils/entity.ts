@@ -17,6 +17,12 @@ export const createHistoryEntity = (
 
     @Column({
       nullable: true,
+      type: opts.modifiedByColumnType,
+    })
+    modifiedBy: string;
+
+    @Column({
+      nullable: true,
     })
     entityType: string;
 
@@ -40,15 +46,15 @@ export const createHistoryInstance = (
   { opts, target }: AuditSubscriberOptions,
   newEntity: Record<string, unknown>,
   action: AuditAction,
+  userId?: number | string,
 ) => {
-  // @ts-ignore
   const instance = new target(); // typeorm needs a new instance to save default values
-  instance.data = opts.jsonColumnType.includes('json')
+  instance.data = opts.jsonColumnType?.includes('json')
     ? newEntity
     : JSON.stringify(newEntity);
   instance.action = action;
   instance.entityId = newEntity[opts.primaryIdColumn];
-
+  instance.modifiedBy = userId;
   if (opts.isEntitySpecific) {
     instance.entityType = target.name;
   }

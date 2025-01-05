@@ -6,6 +6,8 @@ import {
   type SoftRemoveEvent,
   type UpdateEvent,
   type EntityManager,
+  type DataSource,
+  type EntityMetadata,
 } from 'typeorm';
 import { getMetaData } from '../utils/reflect';
 import { AuditAction } from '../types';
@@ -14,9 +16,10 @@ import { createHistoryInstance, isFunction } from '../utils';
 @EventSubscriber()
 export class AuditSubscriber implements EntitySubscriberInterface {
   private async saveHistory(
-    entityType: Function | string,
+    entityType: EntityMetadata['target'],
     manager: EntityManager,
     newEntity: any,
+    connection: DataSource,
     action: AuditAction,
   ) {
     if (!isFunction(entityType)) {
@@ -29,9 +32,11 @@ export class AuditSubscriber implements EntitySubscriberInterface {
       return;
     }
 
+    const userId = await auditOpts.opts.getModifiedBy?.(connection, newEntity);
+
     await manager.save(
       auditOpts.opts.tableName,
-      createHistoryInstance(auditOpts, newEntity, action),
+      createHistoryInstance(auditOpts, newEntity, action, userId),
     );
   }
 
@@ -40,6 +45,7 @@ export class AuditSubscriber implements EntitySubscriberInterface {
       event.metadata.target,
       event.manager,
       event.entity,
+      event.connection,
       AuditAction.Create,
     );
   }
@@ -49,6 +55,7 @@ export class AuditSubscriber implements EntitySubscriberInterface {
       event.metadata.target,
       event.manager,
       event.entity,
+      event.connection,
       AuditAction.Update,
     );
   }
@@ -58,6 +65,7 @@ export class AuditSubscriber implements EntitySubscriberInterface {
       event.metadata.target,
       event.manager,
       event.databaseEntity,
+      event.connection,
       AuditAction.Delete,
     );
   }

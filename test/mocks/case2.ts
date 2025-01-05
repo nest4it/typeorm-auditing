@@ -4,28 +4,22 @@ import {
     CreateDateColumn,
     DeleteDateColumn,
     Entity,
-    Index,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
 import { Audit } from '../../src/decorator/audit.decorator';
 
-class MyBase1 extends BaseEntity {
-    @PrimaryGeneratedColumn({ type: 'int' })
-    id!: number;
-}
-
-class MyBase2 extends MyBase1 {
-    @Column()
-    @Index()
-    firstName!: string;
-}
-
 @Audit({
     jsonColumnType: 'text',
+    getModifiedBy: async (connection, entity) => {
+        return '1';
+    }
 })
 @Entity()
-export class Case1 extends MyBase2 {
+export class Case2 extends BaseEntity {
+    @PrimaryGeneratedColumn({ type: 'int' })
+    id!: number;
+
     @Column()
     lastName!: string;
 
@@ -40,12 +34,4 @@ export class Case1 extends MyBase2 {
 
     @DeleteDateColumn()
     deletedAt!: Date;
-
-    public get fullName(): string {
-        return `${this.firstName} ${this.lastName}`;
-    }
-
-    public FullName(): string {
-        return `${this.firstName} ${this.lastName}`;
-    }
 }
