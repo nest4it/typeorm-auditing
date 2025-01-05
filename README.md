@@ -71,9 +71,10 @@ const dataSource = await withAuditDataSource(
     logging: 'all',
     entities: [User],
   })
+)
 
 await dataSource.initialize();
-)
+
 ```
 
 The `withAuditDataSource` basically extracts the meta data from the TypeORM entities and make sure the entites with `Audit` metadata are recognised.
