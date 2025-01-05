@@ -63,7 +63,7 @@ Once you've enhanced entities with the `Audit` decorator, you need to use the `w
 import { withAuditDataSource } from  "@n4it/typeorm-audit";
 import { DataSource } from "typeorm";
 
-const connection = await withAuditDataSource(
+const dataSource = await withAuditDataSource(
   new DataSource({
     type: 'sqlite',
     database: ':memory:',
@@ -71,6 +71,8 @@ const connection = await withAuditDataSource(
     logging: 'all',
     entities: [User],
   })
+
+await dataSource.initialize();
 )
 ```
 
