@@ -2,11 +2,17 @@ import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeor
 import { AuditAction, type AuditSubscriberOptions, type AuditOptions } from '../types';
 import { isStringVersionType } from './is';
 
-export const createHistoryEntity = (opts: AuditOptions & { isEntitySpecific: boolean }) => {
+export const createHistoryEntity = (
+  opts: AuditOptions & { isEntitySpecific: boolean },
+) => {
   @Entity({ name: opts.tableName })
   class HistoryEntity {
-    // @ts-ignore
-    @PrimaryGeneratedColumn(isStringVersionType(opts.primaryIdType) ? opts.primaryIdType : { type: opts.primaryIdType })
+    @PrimaryGeneratedColumn(
+      // @ts-ignore
+      isStringVersionType(opts.primaryIdType)
+        ? opts.primaryIdType
+        : { type: opts.primaryIdType },
+    )
     id: string | number;
 
     @Column({
@@ -28,21 +34,24 @@ export const createHistoryEntity = (opts: AuditOptions & { isEntitySpecific: boo
   }
 
   return HistoryEntity;
-}
+};
 
 export const createHistoryInstance = (
-  { opts, target }: AuditSubscriberOptions, 
-  newEntity: Record<string, unknown>, 
-  action: AuditAction
+  { opts, target }: AuditSubscriberOptions,
+  newEntity: Record<string, unknown>,
+  action: AuditAction,
 ) => {
   // @ts-ignore
   const instance = new target(); // typeorm needs a new instance to save default values
-  instance.data = opts.jsonColumnType.includes("json") ? newEntity : JSON.stringify(newEntity);
+  instance.data = opts.jsonColumnType.includes('json')
+    ? newEntity
+    : JSON.stringify(newEntity);
   instance.action = action;
   instance.entityId = newEntity[opts.primaryIdColumn];
+
   if (opts.isEntitySpecific) {
     instance.entityType = target.name;
   }
 
   return instance;
-}
+};

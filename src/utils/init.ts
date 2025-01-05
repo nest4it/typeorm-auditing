@@ -1,6 +1,6 @@
-import { DataSource, type EntityMetadata } from "typeorm";
-import { getMetaData } from "./reflect";
-import { AuditSubscriber } from "../subscribers/audit.subscriber";
+import { DataSource, type EntityMetadata } from 'typeorm';
+import { getMetaData } from './reflect';
+import { AuditSubscriber } from '../subscribers/audit.subscriber';
 
 export const getAuditEntity = (entityMetadata: EntityMetadata) => {
   const meta = getMetaData(entityMetadata.target);
@@ -9,8 +9,8 @@ export const getAuditEntity = (entityMetadata: EntityMetadata) => {
     return undefined;
   }
 
-  return meta.historyEntity
-}
+  return meta.historyEntity;
+};
 
 export const withAuditDataSource = async (dataSource: DataSource) => {
   const originDataSource = await new DataSource({
@@ -19,8 +19,7 @@ export const withAuditDataSource = async (dataSource: DataSource) => {
     synchronize: false,
   }).initialize();
 
-  const allMetaData = originDataSource
-    .entityMetadatas
+  const allMetaData = originDataSource.entityMetadatas
     .map(getAuditEntity)
     .filter(Boolean);
 
@@ -45,4 +44,4 @@ export const withAuditDataSource = async (dataSource: DataSource) => {
     entities: combinedEntities,
     subscribers: combinedSubscribers,
   });
-}
+};

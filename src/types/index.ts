@@ -1,4 +1,3 @@
-import type { PrimaryGeneratedColumn } from 'typeorm/decorator/columns/PrimaryGeneratedColumn';
 import type { EntityOptions } from 'typeorm/decorator/options/EntityOptions';
 import type { PrimaryGeneratedColumnType } from 'typeorm/driver/types/ColumnTypes';
 
@@ -12,7 +11,7 @@ export interface AuditOptions extends EntityOptions {
   /**
    * The type of *version* column can be specified.
    */
-  primaryIdType: PrimaryGeneratedColumnType | Parameters<typeof PrimaryGeneratedColumn>[0];
+  primaryIdType: PrimaryGeneratedColumnType | 'uuid' | 'rowid' | 'identity' | 'increment';
   tableName: string;
   jsonColumnType: 'jsonb' | 'json' | 'simple-json' | 'text';
   primaryIdColumn: string;
@@ -20,6 +19,5 @@ export interface AuditOptions extends EntityOptions {
 
 export interface AuditSubscriberOptions {
   opts: AuditOptions & { isEntitySpecific: boolean };
-  // historyTarget: Function;
   target: Function;
 }

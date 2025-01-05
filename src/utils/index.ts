@@ -1,3 +1,3 @@
-export * from "./is";
-export * from "./options";
-export * from "./entity";
+export * from './is';
+export * from './options';
+export * from './entity';

@@ -1,5 +1,5 @@
-import { AUDIT_METADATA_KEY } from "../constants";
-import type { AuditSubscriberOptions } from "../types";
+import { AUDIT_METADATA_KEY } from '../constants';
+import type { AuditSubscriberOptions } from '../types';
 
 export const setMetaData = (
   metadataValue: AuditSubscriberOptions & { historyEntity: Function },
@@ -11,7 +11,7 @@ export const setMetaData = (
   } else {
     Reflect.defineMetadata(AUDIT_METADATA_KEY, metadataValue, target);
   }
-}
+};
 
 export const getMetaData = (
   target: Object,
@@ -20,4 +20,4 @@ export const getMetaData = (
   return propertyKey
     ? Reflect.getMetadata(AUDIT_METADATA_KEY, target, propertyKey)
     : Reflect.getMetadata(AUDIT_METADATA_KEY, target);
-}
+};
