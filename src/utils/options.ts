@@ -6,7 +6,7 @@ export const createOpts = (
 ): AuditOptions & { isEntitySpecific: boolean } => ({
   primaryIdType: options.primaryIdType ?? ('int' as const),
   jsonColumnType: options.jsonColumnType ?? 'jsonb',
-  tableName: options.tableName ?? `${target.name}_audit`,
+  tableName: options.tableName.toLowerCase() ?? `${target.name}_audit`.toLowerCase(),
   isEntitySpecific: options.tableName === undefined,
   primaryIdColumn: options.primaryIdColumn ?? 'id',
 });
