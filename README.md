@@ -57,21 +57,24 @@ export class User {
 }
 ```
 
-Once you've enhanced entities with the `Audit` decorator, you need to use the `` dataSource wrapper in order to let the changes have effect:
+Once you've enhanced entities with the `Audit` decorator, you need to use the `withAuditDataSource` dataSource wrapper in order to let the changes to have effect:
 
 ```typescript
-import { initializeDataSourceWithAudit } from  "@n4it/typeorm-audit";
+import { withAuditDataSource } from  "@n4it/typeorm-audit";
+import { DataSource } from "typeorm";
 
-const connection = await initializeDataSourceWithAudit({
-      type: 'sqlite',
+const connection = await withAuditDataSource(
+  new DataSource({
+    type: 'sqlite',
     database: ':memory:',
     synchronize: true,
     logging: 'all',
     entities: [User],
-})
+  })
+)
 ```
 
-The `initializeDataSourceWithAudit` basically extracts the meta data from the TypeORM entities and make sure the `Audit` metadata will be recognised.
+The `withAuditDataSource` basically extracts the meta data from the TypeORM entities and make sure the entites with `Audit` metadata are recognised.
 
 ## Support
 

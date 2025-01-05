@@ -1,48 +1,48 @@
-import { DataSource, DataSourceOptions } from "typeorm";
+import { DataSource, type EntityMetadata } from "typeorm";
 import { getMetaData } from "./reflect";
 import { AuditSubscriber } from "../subscribers/audit.subscriber";
 
-export const initializeDataSourceWithAudit = async (options: DataSourceOptions) => {
+export const getAuditEntity = (entityMetadata: EntityMetadata) => {
+  const meta = getMetaData(entityMetadata.target);
+
+  if (!meta) {
+    return undefined;
+  }
+
+  return meta.historyEntity
+}
+
+export const withAuditDataSource = async (dataSource: DataSource) => {
   const originDataSource = await new DataSource({
-    ...options,
+    ...dataSource.options,
     logger: undefined,
     synchronize: false,
   }).initialize();
 
-  const allMetaData = originDataSource.entityMetadatas.map(entityMetadata => {
-    const meta = getMetaData(entityMetadata.target);
-    
-    if (!meta) {
-      return undefined;
-    }
+  const allMetaData = originDataSource
+    .entityMetadatas
+    .map(getAuditEntity)
+    .filter(Boolean);
 
-      return meta.historyEntity
-  }).filter(Boolean);
+  let originalEntities = originDataSource.options.entities || [];
+  let originalSubscribers = originDataSource.options.subscribers || [];
 
-  // Extract original entities
-  let originalEntities = options.entities || [];
-  let originalSubscribers = options.subscribers || [];
-
-  // Normalize entities into an array if not already
   if (!Array.isArray(originalEntities)) {
     originalEntities = Object.values(originalEntities);
   }
 
-  // Normalize subscribers into an array if not already
   if (!Array.isArray(originalSubscribers)) {
     originalSubscribers = Object.values(originalSubscribers);
   }
 
-  // Combine original and audit entities
   const combinedEntities = [...originalEntities, ...allMetaData];
   const combinedSubscribers = [...originalSubscribers, AuditSubscriber];
 
   await originDataSource.destroy();
 
-  // Create a new DataSource with enriched entities
   return new DataSource({
-    ...options,
+    ...dataSource.options,
     entities: combinedEntities,
     subscribers: combinedSubscribers,
-  }).initialize();
+  });
 }

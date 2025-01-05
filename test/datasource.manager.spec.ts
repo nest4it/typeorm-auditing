@@ -1,20 +1,21 @@
-import { EntitySchema, MixedList } from 'typeorm';
+import { DataSource, EntitySchema, MixedList } from 'typeorm';
 import { Case1 } from './mocks/case1';
-import { initializeDataSourceWithAudit } from '../src';
+import { withAuditDataSource } from '../src';
 
-const initializeDataSource = (entities: MixedList<string | Function | EntitySchema<any>>) => initializeDataSourceWithAudit({
-    type: 'sqlite',
-    database: ':memory:',
-    synchronize: true,
-    logging: 'all',
-    entities,
-});
+const initializeDataSource = (entities: MixedList<string | Function | EntitySchema<any>>) => 
+    withAuditDataSource(new DataSource({
+        type: 'sqlite',
+        database: ':memory:',
+        synchronize: true,
+        logging: 'all',
+        entities,
+    }));
 
 jest.setTimeout(60000);
 
 describe("DataSource Manager", () => {
     it("should add to datasource manager", async () => {
-        const dataSource = await initializeDataSource([Case1]);
+        const dataSource = await (await initializeDataSource([Case1])).initialize();
 
         const entity = await dataSource.manager.save(
             Case1.create({
