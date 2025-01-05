@@ -1,7 +1,7 @@
-import { AuditingAction } from '../src/decorator/audit-entity.decorator';
+import { AuditingAction } from '../src/decorator/audit.decorator';
 import { testConnection } from './test-common';
 import { In } from 'typeorm';
-import { Case3, Case3Audit, Case3Parent } from './entity/case3';
+import { Case3, Case3Audit, Case3Parent } from './mocks/case3';
 
 describe('AuditingEntity - Case3', () => {
     beforeEach(async () => {

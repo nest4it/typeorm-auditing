@@ -1,2 +1,3 @@
-export * from './subscribers/audit.subscriber';
-export * from './decorator/audit-entity.decorator';
+export { AuditSubscriber } from './subscribers/audit.subscriber';
+export { Audit } from './decorator/audit.decorator';
+export { AuditOptions, AuditAction } from "./types";

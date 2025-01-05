@@ -1,32 +1,21 @@
-import { AbstractAuditingBaseEntity, AuditingEntity } from '../src/decorator/audit-entity.decorator';
+import { Audit } from '../src/decorator/audit.decorator';
 import { getMetadataArgsStorage } from 'typeorm';
-import * as assert from 'assert';
-import { Case1Audit } from './entity/case1';
-import { Case2Audit } from './entity/case2';
-import { Case3Audit } from './entity/case3';
-import { Case4Audit } from './entity/case4';
+import { Case1 } from './mocks/case1';
+import { Case2 } from './mocks/case2';
+import { Case3 } from './mocks/case3';
+import { Case4 } from './mocks/case4';
 
-describe('AuditingEntity', () => {
-    beforeAll(() => {
-        assert.ok(Case1Audit);
-        assert.ok(Case2Audit);
-        assert.ok(Case1Audit);
-        assert.ok(Case4Audit);
-    });
-
+describe('AuditEntity', () => {
     it('Case1(Inheritance)', async () => {
-        expect(getMetadataArgsStorage().tables.find((table) => table.target === Case1Audit)).toBeDefined();
-        for (const columnName of ['_seq', '_action', '_modifiedAt']) {
+        expect(getMetadataArgsStorage().tables.find((table) => table.target === 'case1_audit')).toBeDefined();
+        for (const columnName of ['version', 'entityType', 'entityId']) {
             expect(
                 getMetadataArgsStorage().columns.find(
                     (column) => column.target === AbstractAuditingBaseEntity && column.propertyName === columnName
                 )
             ).toBeDefined();
         }
-        expect(getMetadataArgsStorage().indices.find((index) => index.target === Case1Audit)).toBeDefined();
-        expect(
-            getMetadataArgsStorage().generations.find((gen) => gen.target === AbstractAuditingBaseEntity && gen.propertyName === '_seq')
-        ).toBeDefined();
+        expect(getMetadataArgsStorage().indices.find((index) => index.target === 'case1_audit')).toBeDefined();
     });
 
     it('Case2(Not inherited + Partial)', async () => {

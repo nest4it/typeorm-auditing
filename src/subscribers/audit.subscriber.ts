@@ -1,58 +1,50 @@
-import { createHistoryEntity } from '@/entity';
-import { AuditAction } from '@/types';
+import { AuditAction, type AuditSubscriberOptions } from '@/types';
+import { createHistoryInstance, isFunction } from '@/utils';
 import {
-    EntitySubscriberInterface,
+    type EntitySubscriberInterface,
     EventSubscriber,
-    InsertEvent,
-    RemoveEvent,
-    SoftRemoveEvent,
-    UpdateEvent,
-    EntityManager,
-    BaseEntity,
+    type InsertEvent,
+    type RemoveEvent,
+    type SoftRemoveEvent,
+    type UpdateEvent,
+    type EntityManager,
 } from 'typeorm';
-import { MetadataUtils } from 'typeorm/metadata-builder/MetadataUtils';
-
-type ClassType = { new (): any };
 
 @EventSubscriber()
 export class AuditSubscriber implements EntitySubscriberInterface {
-    static historyMap = new Map<Function, ReturnType<typeof createHistoryEntity>>();
+    static auditMap = new Map<Function, AuditSubscriberOptions>();
 
-    static Subscribe(entity: Function, historyEntity: ReturnType<typeof createHistoryEntity>) {
-        AuditSubscriber.historyMap.set(entity, historyEntity);
+    static subscribe(opts: AuditSubscriberOptions) {
+        AuditSubscriber.auditMap.set(opts.target, opts);
     }
 
-    private async saveHistory(entityType: Function | string, manager: EntityManager, entity: any, action: AuditAction) {
-        const target = AuditSubscriber.historyMap.get(entityType as Function);
-        
-        if (!target || typeof target !== 'function') {
+    private async saveHistory(entityType: Function | string, manager: EntityManager, newEntity: any, action: AuditAction) {
+        if (!isFunction(entityType)) {
             return;
         }
 
-        // If target(audit entity) is a class that inherits from BaseEntity, instantiate it.
-        // Without this process, listeners such as @BeforeInsert do not work.
-        if (MetadataUtils.getInheritanceTree(target).includes(BaseEntity)) {
-            return manager.save((target as typeof BaseEntity).create({ ...entity, action }));
-        } 
+        const auditOpts = AuditSubscriber.auditMap.get(entityType);
         
-        const replica = new (target as any as ClassType)();
-        Object.assign(replica, { ...entity, action });
-        await manager.save(target, replica);
+        if (!auditOpts?.target || typeof auditOpts?.target !== 'function') {
+            return;
+        }
+
+        await manager.save(auditOpts.target, createHistoryInstance(auditOpts, newEntity, action));
     }
 
-    async afterInsert<T>(event: InsertEvent<T>) {
+    async afterInsert(event: InsertEvent<any>) {
         return this.saveHistory(event.metadata.target, event.manager, event.entity, AuditAction.Create);
     }
 
-    async afterUpdate<T>(event: UpdateEvent<T>) {
+    async afterUpdate(event: UpdateEvent<any>) {
         return this.saveHistory(event.metadata.target, event.manager, event.entity, AuditAction.Update);
     }
 
-    async afterRemove<T>(event: RemoveEvent<T>) {
+    async afterRemove(event: RemoveEvent<any>) {
         return this.saveHistory(event.metadata.target, event.manager, event.databaseEntity, AuditAction.Delete);
     }
 
-    async afterSoftRemove<T>(event: SoftRemoveEvent<T>) {
+    async afterSoftRemove(event: SoftRemoveEvent<any>) {
         return this.afterRemove(event);
     }
 }

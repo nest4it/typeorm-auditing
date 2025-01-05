@@ -1,5 +1,5 @@
-import { AuditingAction } from '../src/decorator/audit-entity.decorator';
-import { Case1, Case1Audit } from './entity/case1';
+import { Audit } from '../src/decorator/audit.decorator';
+import { Case1, Case1Audit } from './mocks/case1';
 import { testConnection } from './test-common';
 
 describe('AuditingEntity - Case1', () => {

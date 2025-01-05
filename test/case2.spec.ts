@@ -1,6 +1,6 @@
-import { AuditingAction } from '../src/decorator/audit-entity.decorator';
+import { AuditingAction } from '../src/decorator/audit.decorator';
 import { testConnection } from './test-common';
-import { Case2, Case2Audit, ChildCase2 } from './entity/case2';
+import { Case2, Case2Audit, ChildCase2 } from './mocks/case2';
 import { In } from 'typeorm';
 
 describe('AuditingEntity - Case2', () => {

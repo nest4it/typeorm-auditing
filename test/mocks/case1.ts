@@ -1,5 +1,4 @@
 import {
-    AfterLoad,
     BaseEntity,
     Column,
     CreateDateColumn,
@@ -9,14 +8,14 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
-import { AuditingAction, AuditingEntity, AuditingEntityDefaultColumns } from '../../src/decorator/audit-entity.decorator';
+import { Audit } from '../../src/decorator/audit.decorator';
 
-abstract class MyBase1 extends BaseEntity {
+class MyBase1 extends BaseEntity {
     @PrimaryGeneratedColumn({ type: 'int' })
     id!: number;
 }
 
-abstract class MyBase2 extends MyBase1 {
+class MyBase2 extends MyBase1 {
     @Column()
     @Index()
     firstName!: string;
@@ -25,9 +24,11 @@ abstract class MyBase2 extends MyBase1 {
 enum Gender {
     Male = 'Male',
     Female = 'Female',
-    Diverse = 'Diverse',
 }
 
+@Audit({
+    tableName: 'case1_audit',
+})
 @Entity()
 export class Case1 extends MyBase2 {
     @Column()
@@ -39,7 +40,6 @@ export class Case1 extends MyBase2 {
     @Column({
         type: 'enum',
         enum: Gender,
-        enumName: 'Gender', // Had to add this, otherwise it cant even generate the migration
     })
     gender!: Gender;
 
@@ -59,19 +59,4 @@ export class Case1 extends MyBase2 {
     public FullName(): string {
         return `${this.firstName} ${this.lastName}`;
     }
-
-    @AfterLoad()
-    afterLoad() {
-        console.log(this.age);
-    }
-}
-
-@AuditingEntity(Case1, {
-    //Set type to int for sqlite e2e test
-    seqType: 'int',
-})
-export class Case1Audit extends Case1 implements AuditingEntityDefaultColumns {
-    readonly _seq!: number;
-    readonly _action!: AuditingAction;
-    readonly _modifiedAt!: Date;
 }

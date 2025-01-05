@@ -1,5 +1,5 @@
 {
-  "name": "@n4it/typeorm-auditing",
+  "name": "@n4it/typeorm-audit",
   "version": "0.0.1",
   "description": "TypeORM Auditing: Create history tables and manage changes of entities automagically.",
   "homepage": "https://github.com/nest4it/typeorm-auditing",
@@ -19,8 +19,8 @@
   "keywords": [
     "TypeORM",
     "n4it",
-    "Auditing",
-    "History"
+    "audit",
+    "history"
   ],
   "author": "n4it <hello@n4it.nl>",
   "license": "GPL-3.0",
