@@ -1,5 +1,5 @@
 import { BaseEntity, Column, CreateDateColumn, type DeepPartial, Entity, PrimaryGeneratedColumn, VersionColumn } from 'typeorm';
-import { AuditAction, type AuditSubscriberOptions, type ClassType, type AuditOptions } from '@/types';
+import { AuditAction, type AuditSubscriberOptions, type ClassType, type AuditOptions } from '../types';
 import { isStringVersionType } from './is';
 import { isEntityInstanceOfBaseEntity } from "./metadata"
 

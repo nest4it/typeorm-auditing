@@ -1,5 +1,5 @@
-import { AuditAction, type AuditSubscriberOptions } from '@/types';
-import { createHistoryInstance, isFunction } from '@/utils';
+import { AuditAction, type AuditSubscriberOptions } from '../types';
+import { createHistoryInstance, isFunction } from '../utils';
 import {
     type EntitySubscriberInterface,
     EventSubscriber,

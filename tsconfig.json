@@ -18,12 +18,7 @@
     "noImplicitThis": true,
     "noUncheckedIndexedAccess": true,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": true,
-    "paths": {
-      "@/*": [
-        "./src/*"
-      ]
-    }
+    "noFallthroughCasesInSwitch": true
   },
   "exclude": [
     "lib"

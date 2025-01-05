@@ -1,8 +1,8 @@
 import { BaseEntity, getMetadataArgsStorage } from 'typeorm';
 import type { TableMetadataArgs } from 'typeorm/metadata-args/TableMetadataArgs';
 
-import { AuditSubscriber } from '@/subscribers/audit.subscriber';
-import type { AuditSubscriberOptions } from '@/types';
+import { AuditSubscriber } from '../subscribers/audit.subscriber';
+import type { AuditSubscriberOptions } from '../types';
 import { MetadataUtils } from 'typeorm/metadata-builder/MetadataUtils';
 
 export const addToMigrations = (auditOptions: AuditSubscriberOptions) => {

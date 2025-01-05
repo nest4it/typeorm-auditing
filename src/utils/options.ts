@@ -1,5 +1,5 @@
-import type { AuditOptions } from '@/types';
-import { createHistoryEntity } from '@/utils/entity';
+import type { AuditOptions } from '../types';
+import { createHistoryEntity } from '../utils/entity';
 
 export const createOpts = (options: Partial<AuditOptions>, target: Function): AuditOptions & { isEntitySpecific: boolean } => ({
   primaryIdType: options.primaryIdType ?? ('bigint' as const),

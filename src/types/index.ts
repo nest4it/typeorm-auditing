@@ -1,4 +1,4 @@
-import { PrimaryGeneratedColumn } from 'typeorm/decorator/columns/PrimaryGeneratedColumn';
+import type { PrimaryGeneratedColumn } from 'typeorm/decorator/columns/PrimaryGeneratedColumn';
 import type { EntityOptions } from 'typeorm/decorator/options/EntityOptions';
 import type { PrimaryGeneratedColumnType } from 'typeorm/driver/types/ColumnTypes';
 
