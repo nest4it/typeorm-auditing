@@ -1,7 +1,6 @@
-import { BaseEntity, Column, CreateDateColumn, type DeepPartial, Entity, PrimaryGeneratedColumn, VersionColumn } from 'typeorm';
-import { AuditAction, type AuditSubscriberOptions, type ClassType, type AuditOptions } from '../types';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, VersionColumn } from 'typeorm';
+import { AuditAction, type AuditSubscriberOptions, type AuditOptions } from '../types';
 import { isStringVersionType } from './is';
-import { isEntityInstanceOfBaseEntity } from "./metadata"
 
 export const createEntityHistory = (opts: AuditOptions, PrimaryKeyDecorator: PropertyDecorator) => {
   @Entity({ name: opts.tableName })
@@ -74,8 +73,8 @@ export const createHistoryEntity = (opts: AuditOptions & { isEntitySpecific: boo
   return createGenericHistoryEntity(opts, PrimaryDecorator);
 }
 
-export const createHistory = (
-  {opts, target }: AuditSubscriberOptions, 
+export const createHistoryInstance = (
+  { opts, target }: AuditSubscriberOptions, 
   newEntity: Record<string, unknown>, 
   action: AuditAction
 ) => ({
@@ -85,21 +84,3 @@ export const createHistory = (
   modifiedAt: new Date(),
   ...(opts.isEntitySpecific ? { entityType: target.name } : {}),
 })
-
-export const createHistoryInstance = (
-  auditOptions: AuditSubscriberOptions, 
-  newEntity: Record<string, unknown>, 
-  action: AuditAction
-) => {
-
-  // If the entity is an instance of BaseEntity, we can use the create method
-  if (isEntityInstanceOfBaseEntity(auditOptions.target)) {
-    return (auditOptions.target as typeof BaseEntity).create(
-      createHistory(auditOptions, newEntity, action) as DeepPartial<BaseEntity>,
-    );
-  } 
-  
-  const replica = new (auditOptions.target as ClassType)();
-  
-  return Object.assign(replica, createHistory(auditOptions, newEntity, action));
-}

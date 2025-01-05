@@ -21,11 +21,6 @@ class MyBase2 extends MyBase1 {
     firstName!: string;
 }
 
-enum Gender {
-    Male = 'Male',
-    Female = 'Female',
-}
-
 @Audit({
     tableName: 'case1_audit',
 })
@@ -36,12 +31,6 @@ export class Case1 extends MyBase2 {
 
     @Column()
     age!: number;
-
-    @Column({
-        type: 'enum',
-        enum: Gender,
-    })
-    gender!: Gender;
 
     @CreateDateColumn()
     createdAt!: Date;

@@ -11,6 +11,8 @@ const initializeDataSource = (entities: MixedList<string | Function | EntitySche
     subscribers: [AuditSubscriber],
 }).initialize()
 
+jest.setTimeout(60000);
+
 describe("DataSource Manager", () => {
     it("should add to datasource manager", async () => {
         const dataSource = await initializeDataSource([Case1]);

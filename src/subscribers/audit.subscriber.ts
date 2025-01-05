@@ -29,7 +29,7 @@ export class AuditSubscriber implements EntitySubscriberInterface {
             return;
         }
 
-        await manager.save(auditOpts.target, createHistoryInstance(auditOpts, newEntity, action));
+        await manager.save(auditOpts.opts.tableName, createHistoryInstance(auditOpts, newEntity, action));
     }
 
     async afterInsert(event: InsertEvent<any>) {

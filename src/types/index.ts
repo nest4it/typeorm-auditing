@@ -14,7 +14,7 @@ export interface AuditOptions extends EntityOptions {
    */
   primaryIdType: PrimaryGeneratedColumnType | Parameters<typeof PrimaryGeneratedColumn>[0];
   tableName: string;
-  jsonColumnType: string;
+  jsonColumnType: 'jsonb' | 'json' | 'simple-json' | 'text';
   primaryIdColumn: string;
 }
 
@@ -23,5 +23,3 @@ export interface AuditSubscriberOptions {
   historyTarget: Function;
   target: Function;
 }
-
-export type ClassType = { new(): any };
