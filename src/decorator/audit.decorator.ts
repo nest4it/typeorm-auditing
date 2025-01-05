@@ -1,11 +1,13 @@
-import { AuditSubscriber } from '../subscribers/audit.subscriber';
 import type { AuditOptions } from '../types';
-import { addToMigrations, createEntityOpts } from '../utils';
+import { createEntityOpts, createHistoryEntity } from '../utils';
+import { setMetaData } from "../utils/reflect";
 
 export const Audit = (options?: Partial<AuditOptions>) => (target: Function) => {
     const auditOptions = createEntityOpts(target, options);
+    const historyTarget = createHistoryEntity(auditOptions.opts);
 
-    addToMigrations(auditOptions);
-
-    AuditSubscriber.subscribe(auditOptions);
+    setMetaData({
+        ...auditOptions,
+        historyEntity: historyTarget,
+    }, target);
 };

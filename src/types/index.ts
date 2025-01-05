@@ -20,6 +20,6 @@ export interface AuditOptions extends EntityOptions {
 
 export interface AuditSubscriberOptions {
   opts: AuditOptions & { isEntitySpecific: boolean };
-  historyTarget: Function;
+  // historyTarget: Function;
   target: Function;
 }

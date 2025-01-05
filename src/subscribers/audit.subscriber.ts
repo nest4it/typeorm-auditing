@@ -1,5 +1,3 @@
-import { AuditAction, type AuditSubscriberOptions } from '../types';
-import { createHistoryInstance, isFunction } from '../utils';
 import {
     type EntitySubscriberInterface,
     EventSubscriber,
@@ -9,21 +7,18 @@ import {
     type UpdateEvent,
     type EntityManager,
 } from 'typeorm';
+import { getMetaData } from '../utils/reflect';
+import { AuditAction } from '../types';
+import { createHistoryInstance, isFunction } from '../utils';
 
 @EventSubscriber()
 export class AuditSubscriber implements EntitySubscriberInterface {
-    static auditMap = new Map<Function, AuditSubscriberOptions>();
-
-    static subscribe(opts: AuditSubscriberOptions) {
-        AuditSubscriber.auditMap.set(opts.target, opts);
-    }
-
     private async saveHistory(entityType: Function | string, manager: EntityManager, newEntity: any, action: AuditAction) {
         if (!isFunction(entityType)) {
             return;
         }
 
-        const auditOpts = AuditSubscriber.auditMap.get(entityType);
+        const auditOpts = getMetaData(entityType);
         
         if (!auditOpts?.target || typeof auditOpts?.target !== 'function') {
             return;

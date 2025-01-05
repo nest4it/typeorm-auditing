@@ -23,6 +23,7 @@ class MyBase2 extends MyBase1 {
 
 @Audit({
     tableName: 'case1_audit',
+    jsonColumnType: 'text',
 })
 @Entity()
 export class Case1 extends MyBase2 {
