@@ -1,6 +1,6 @@
 import { EntitySchema, MixedList } from 'typeorm';
 import { Case1 } from './mocks/case1';
-import { initializeDataSourceWithAudit, AuditSubscriber } from '../src';
+import { initializeDataSourceWithAudit } from '../src';
 
 const initializeDataSource = (entities: MixedList<string | Function | EntitySchema<any>>) => initializeDataSourceWithAudit({
     type: 'sqlite',
@@ -8,14 +8,13 @@ const initializeDataSource = (entities: MixedList<string | Function | EntitySche
     synchronize: true,
     logging: 'all',
     entities,
-    subscribers: [AuditSubscriber],
 });
 
 jest.setTimeout(60000);
 
 describe("DataSource Manager", () => {
     it("should add to datasource manager", async () => {
-        const dataSource = (await initializeDataSource([Case1]));
+        const dataSource = await initializeDataSource([Case1]);
 
         const entity = await dataSource.manager.save(
             Case1.create({

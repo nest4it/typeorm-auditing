@@ -11,7 +11,8 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "release": "semantic-release",
-    "build": "tsc"
+    "build": "tsc",
+    "test": "jest"
   },
   "publishConfig": {
     "access": "public"

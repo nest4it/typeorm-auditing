@@ -1,5 +1,6 @@
 import { DataSource, DataSourceOptions } from "typeorm";
 import { getMetaData } from "./reflect";
+import { AuditSubscriber } from "../subscribers/audit.subscriber";
 
 export const initializeDataSourceWithAudit = async (options: DataSourceOptions) => {
   const originDataSource = await new DataSource({
@@ -20,14 +21,21 @@ export const initializeDataSourceWithAudit = async (options: DataSourceOptions) 
 
   // Extract original entities
   let originalEntities = options.entities || [];
+  let originalSubscribers = options.subscribers || [];
 
   // Normalize entities into an array if not already
   if (!Array.isArray(originalEntities)) {
     originalEntities = Object.values(originalEntities);
   }
 
+  // Normalize subscribers into an array if not already
+  if (!Array.isArray(originalSubscribers)) {
+    originalSubscribers = Object.values(originalSubscribers);
+  }
+
   // Combine original and audit entities
   const combinedEntities = [...originalEntities, ...allMetaData];
+  const combinedSubscribers = [...originalSubscribers, AuditSubscriber];
 
   await originDataSource.destroy();
 
@@ -35,5 +43,6 @@ export const initializeDataSourceWithAudit = async (options: DataSourceOptions) 
   return new DataSource({
     ...options,
     entities: combinedEntities,
+    subscribers: combinedSubscribers,
   }).initialize();
 }
