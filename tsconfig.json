@@ -25,5 +25,11 @@
         "./src/*"
       ]
     }
-  }
+  },
+  "exclude": [
+    "lib"
+  ],
+  "include": [
+    "src"
+  ]
 }
