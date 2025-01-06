@@ -19,14 +19,15 @@ export interface AuditOptions extends EntityOptions {
   tableName: string;
   jsonColumnType: 'jsonb' | 'json' | 'simple-json' | 'text';
   primaryIdColumn: string;
+  saveEntityType: boolean;
   getModifiedBy?: (
     connection: DataSource,
     newEntity: any,
-  ) => Promise<number | string | null | undefined>;
+  ) => Promise<number | string | null | undefined> | number | string | null | undefined;
   modifiedByColumnType?: ColumnType;
 }
 
 export interface AuditSubscriberOptions {
-  opts: AuditOptions & { isEntitySpecific: boolean };
+  opts: AuditOptions & { saveEntityType: boolean };
   target: any;
 }

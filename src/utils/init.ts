@@ -1,4 +1,4 @@
-import { DataSource, type EntityMetadata } from 'typeorm';
+import { DataSource, type DataSourceOptions, type EntityMetadata } from 'typeorm';
 import { getMetaData } from './reflect';
 import { AuditSubscriber } from '../subscribers/audit.subscriber';
 
@@ -12,9 +12,9 @@ export const getAuditEntity = (entityMetadata: EntityMetadata) => {
   return meta.historyEntity;
 };
 
-export const withAuditDataSource = async (dataSource: DataSource) => {
+export const getAuditOptions = async (options: DataSourceOptions) => {
   const originDataSource = await new DataSource({
-    ...dataSource.options,
+    ...options,
     logger: undefined,
     synchronize: false,
   }).initialize();
@@ -39,9 +39,14 @@ export const withAuditDataSource = async (dataSource: DataSource) => {
 
   await originDataSource.destroy();
 
-  return new DataSource({
-    ...dataSource.options,
+  return {
+    ...options,
     entities: combinedEntities,
     subscribers: combinedSubscribers,
-  });
+  };
+};
+
+export const withAuditDataSource = async (dataSource: DataSource) => {
+  const newOptions = await getAuditOptions(dataSource.options);
+  return new DataSource(newOptions);
 };

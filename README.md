@@ -1,17 +1,9 @@
 <div align="center">
-  <h1>Audit (@n4it/typeorm-audit)</h1>
-</div>
-<div align="center">
-  <strong>For storing history on entities.</strong>
-</div>
-<br/>
-<div align="center">
-  <img src="https://gravatar.com/avatar/c27e8ebbf92f687180aa0f13dab9a0b1?size=256" alt="Logo n4it" style="border-radius:100%"/>
-</div>
-
-<br />
-
-<div align="center">
+  <h1>TypeORM Audit (@n4it/typeorm-audit)</h1>
+  <strong>Efficient entity history tracking for TypeORM.</strong>
+  <br/><br/>
+  <img src="https://gravatar.com/avatar/c27e8ebbf92f687180aa0f13dab9a0b1?size=256" alt="N4IT Logo" style="border-radius:50%"/>
+  <br/><br/>
   <a href="https://github.com/nest4it/typeorm-auditing/blob/master/LICENSE">
     <img src="https://img.shields.io/github/license/nest4it/typeorm-auditing.svg" alt="License" />
   </a>
@@ -29,38 +21,41 @@
   </a>
 </div>
 
-## Install
+## Installation
+
+To install the latest version:
+
 ```shell
-$ npm install @n4it/typeorm-audit --save
+npm install @n4it/typeorm-audit --save
 ```
+
+Or using Yarn:
 
 ```shell
 $ yarn add @n4it/typeorm-audit
 ```
 
-----
+<hr/>
 
 ## Usage
-
+To enable auditing, decorate your entities with `@Audit()`:
 ```typescript
-import { Audit } from "@n4it/typeorm-audit"
+import { Audit } from "@n4it/typeorm-audit";
+import { Entity, Column } from "typeorm";
 
-@Audit() // mark your entity as auditable
+@Audit() // Enable auditing for this entity
 @Entity()
 export class User {
-  @Column()
-  firstName: string;
-  @Column()
-  lastName: string;
-  @Column()
-  age: number;
+  @Column() firstName: string;
+  @Column() lastName: string;
+  @Column() age: number;
 }
 ```
 
-Once you've enhanced entities with the `Audit` decorator, you need to use the `withAuditDataSource` dataSource wrapper in order to let the changes to have effect:
+Integrate with your `DataSource`:
 
 ```typescript
-import { withAuditDataSource } from  "@n4it/typeorm-audit";
+import { withAuditDataSource } from "@n4it/typeorm-audit";
 import { DataSource } from "typeorm";
 
 const dataSource = await withAuditDataSource(
@@ -71,50 +66,106 @@ const dataSource = await withAuditDataSource(
     logging: 'all',
     entities: [User],
   })
-)
+);
 
 await dataSource.initialize();
-
 ```
 
-The `withAuditDataSource` basically extracts the meta data from the TypeORM entities and make sure the entites with `Audit` metadata are recognised.
-
-### Use `modifiedBy`
+Or using `getAuditOptions`:
 
 ```typescript
-import { Audit } from "@n4it/typeorm-audit"
+import { getAuditOptions } from "@n4it/typeorm-audit";
+import { DataSource } from "typeorm";
 
+const dataSource = new DataSource(
+  await getAuditOptions({
+    type: 'sqlite',
+    database: ':memory:',
+    synchronize: true,
+    logging: 'all',
+    entities: [User],
+  })
+);
+
+await dataSource.initialize();
+```
+
+## Advanced Features
+Specify Modified By:
+
+```typescript
 @Audit({
-    getModifiedBy: async (connection: DataSource, newEntity: any) => {
-      return Promise.resolve(newEntity.lastModifiedBy ?? 1)
+    getModifiedBy: async (connection, newEntity) => {
+      // Use the connection to query the database
+      return newEntity.lastModifiedBy ?? 1;
     }
 })
 @Entity()
 export class User {
-  @Column()
-  firstName: string;
-  @Column()
-  lastName: string;
-  @Column()
-  age: number;
+  @Column() firstName: string;
+  @Column() lastName: string;
+  @Column() age: number;
 }
 ```
 
-## Support
+Use a single `audit` table:
 
-Any support is welcome. At least you can give us a star.
+```typescript
+@Audit({ tableName: "audit", saveEntityType: true })
+@Entity()
+export class User {
+  @Column() firstName: string;
+  @Column() lastName: string;
+  @Column() age: number;
+}
+
+@Audit({ tableName: "audit", saveEntityType: true })
+@Entity()
+export class Company {
+  @Column() name: string;
+}
+```
+
+## Migrations
+Enhance your `DataSource` with auditing capabilities:
+
+```typescript
+import { DataSource } from "typeorm";
+import { join } from "path";
+import { withAuditDataSource } from "@n4it/typeorm-audit";
+
+export default withAuditDataSource(
+  new DataSource({
+    type: "postgres",
+    useUTC: true,
+    host: process.env.host,
+    port: process.env.port,
+    username: process.env.user,
+    password: process.env.password,
+    database: process.env.name,
+    synchronize: false,
+    entities: [`${join(process.cwd(), "src", "entities")}/*`],
+    migrations: [`${join(__dirname, "migrations")}/*`],
+    migrationsTableName: "migrations",
+    logging: true,
+  }),
+);
+```
+
+## Support
+We welcome contributions of all forms. Please feel free to submit a pull request or open an issue. Star us on GitHub!
 
 ## Contributors
 
 ### Code Contributors
 
-This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
+This project exists thanks to all the people who contribute.
 
 ### Financial Contributors
 
 #### Organizations
 
-Currently this project is sponsored and maintained by N4IT. Get in touch if you want to become a sponsor.
+Currently this project is sponsored and maintained by [N4IT](https://n4it.nl). Get in touch if you want to become a sponsor.
 
 ## License
 

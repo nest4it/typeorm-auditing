@@ -2,9 +2,7 @@ import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeor
 import { AuditAction, type AuditSubscriberOptions, type AuditOptions } from '../types';
 import { isStringVersionType } from './is';
 
-export const createHistoryEntity = (
-  opts: AuditOptions & { isEntitySpecific: boolean },
-) => {
+export const createHistoryEntity = (opts: AuditOptions & { saveEntityType: boolean }) => {
   @Entity({ name: opts.tableName })
   class HistoryEntity {
     @PrimaryGeneratedColumn(
@@ -55,7 +53,7 @@ export const createHistoryInstance = (
   instance.action = action;
   instance.entityId = newEntity[opts.primaryIdColumn];
   instance.modifiedBy = userId;
-  if (opts.isEntitySpecific) {
+  if (opts.saveEntityType) {
     instance.entityType = target.name;
   }
 

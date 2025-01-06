@@ -10,11 +10,24 @@ import {
   type EntityMetadata,
 } from 'typeorm';
 import { getMetaData } from '../utils/reflect';
-import { AuditAction } from '../types';
+import { AuditAction, type AuditSubscriberOptions } from '../types';
 import { createHistoryInstance, isFunction } from '../utils';
+import { GetModifiedByUserError } from '../errors';
 
 @EventSubscriber()
 export class AuditSubscriber implements EntitySubscriberInterface {
+  private async getUserId(
+    auditOptions: AuditSubscriberOptions,
+    connection: DataSource,
+    newEntity: any,
+  ) {
+    try {
+      return await auditOptions.opts.getModifiedBy?.(connection, newEntity);
+    } catch (error) {
+      throw new GetModifiedByUserError(error);
+    }
+  }
+
   private async saveHistory(
     entityType: EntityMetadata['target'],
     manager: EntityManager,
@@ -32,7 +45,7 @@ export class AuditSubscriber implements EntitySubscriberInterface {
       return;
     }
 
-    const userId = await auditOpts.opts.getModifiedBy?.(connection, newEntity);
+    const userId = await this.getUserId(auditOpts, connection, newEntity);
 
     await manager.save(
       auditOpts.opts.tableName,
