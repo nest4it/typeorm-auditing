@@ -82,7 +82,7 @@ export class AuditSubscriber implements EntitySubscriberInterface {
     return this.saveHistory(
       event.metadata.target,
       event.manager,
-      event.entity ?? event.databaseEntity,
+      event.databaseEntity ?? event.entity,
       event.connection,
       AuditAction.Delete,
     );
