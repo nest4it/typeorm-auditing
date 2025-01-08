@@ -9,6 +9,7 @@ export enum AuditAction {
   Create = 'CREATE',
   Update = 'UPDATE',
   Delete = 'DELETE',
+  Recover = 'RECOVER',
 }
 
 export interface AuditOptions extends EntityOptions {

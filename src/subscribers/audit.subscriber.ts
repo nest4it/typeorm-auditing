@@ -39,6 +39,11 @@ export class AuditSubscriber implements EntitySubscriberInterface {
       return;
     }
 
+    // newEntity is undefined when the entity is removed
+    if (!newEntity) {
+      return;
+    }
+
     const auditOpts = getMetaData(entityType);
 
     if (!auditOpts?.target || typeof auditOpts?.target !== 'function') {
@@ -77,7 +82,7 @@ export class AuditSubscriber implements EntitySubscriberInterface {
     return this.saveHistory(
       event.metadata.target,
       event.manager,
-      event.databaseEntity,
+      event.entity ?? event.databaseEntity,
       event.connection,
       AuditAction.Delete,
     );
@@ -85,5 +90,15 @@ export class AuditSubscriber implements EntitySubscriberInterface {
 
   async afterSoftRemove(event: SoftRemoveEvent<any>) {
     return this.afterRemove(event);
+  }
+
+  async afterRecover(event: any) {
+    return this.saveHistory(
+      event.metadata.target,
+      event.manager,
+      event.entity,
+      event.connection,
+      AuditAction.Recover,
+    );
   }
 }
